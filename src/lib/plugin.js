@@ -8,7 +8,7 @@ const Common = require('ethereumjs-common').default;
 
 const usagefeeAbi = require('../abi/StorageUsageFee.json');
 const usageHistoryAbi = require('../abi/StorageUsageHistory.json');
-const ipfsNodeAbi = require('../abi/ipfsNode.json');
+const ipfsNodeAbi = require('../abi/IpfsNode.json');
 const createWebsocketProvider = (provider) => new Web3.providers.WebsocketProvider(provider, {
   clientConfig: {
     maxReceivedFrameSize: 100000000,
