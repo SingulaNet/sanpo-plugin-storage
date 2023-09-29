@@ -28,6 +28,11 @@
       },
       {
         "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_operator",
         "type": "address"
       },
@@ -83,6 +88,11 @@
             "internalType": "uint256",
             "name": "timestamp",
             "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
           },
           {
             "internalType": "address",
@@ -157,6 +167,11 @@
             "internalType": "uint256",
             "name": "timestamp",
             "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
           },
           {
             "internalType": "address",
@@ -237,6 +252,11 @@
             "internalType": "uint256",
             "name": "timestamp",
             "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
           },
           {
             "internalType": "address",

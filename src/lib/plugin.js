@@ -157,6 +157,7 @@ class PluginStorage extends EventEmitter2 {
       opts.ipfsHash,
       opts.ipfsOriginHash,
       opts.timestamp,
+      opts.user,
       opts.operator,
       opts.contentType,
       opts.result,
