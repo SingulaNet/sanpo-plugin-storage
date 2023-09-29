@@ -8,6 +8,7 @@ const Common = require('ethereumjs-common').default;
 
 const usagefeeAbi = require('../abi/StorageUsageFee.json');
 const usageHistoryAbi = require('../abi/StorageUsageHistory.json');
+const ipfsNodeAbi = require('../abi/ipfsNode.json');
 const createWebsocketProvider = (provider) => new Web3.providers.WebsocketProvider(provider, {
   clientConfig: {
     maxReceivedFrameSize: 100000000,
@@ -32,6 +33,7 @@ class PluginStorage extends EventEmitter2 {
     this.provider = this._primaryProvider;
     this.usageFeeAddress = opts.usageFeeAddress;
     this.usageHistoryAddress = opts.usageHistoryAddress;
+    this.ipfsNodeAddress = opts.ipfsNodeAddress;
     this.web3 = null;
     this.healthCheck = false;
   }
@@ -48,6 +50,7 @@ class PluginStorage extends EventEmitter2 {
     this.web3.eth.handleRevert = true;
     this.usageFee = new this.web3.eth.Contract(usagefeeAbi, this.usageFeeAddress);
     this.usageHistory = new this.web3.eth.Contract(usageHistoryAbi, this.usageHistoryAddress);
+    this.ipfsNode = new this.web3.eth.Contract(ipfsNodeAbi, this.ipfsNodeAddress);
     this.web3.eth.transactionBlockTimeout = 20000;
   }
 
@@ -163,7 +166,21 @@ class PluginStorage extends EventEmitter2 {
       opts.result,
       opts.fileName,
     ).encodeABI();
-    return this._sendSignedTransaction(address, privateKey, txData);
+    return this._sendSignedTransaction(address, privateKey, txData, this.usageHistory.options.address);
+  }
+
+  getNodeList() {
+    return this.ipfsNode.methods.getNodeList().call();
+  }
+
+  addNode(address, privateKey, opts) {
+    console.log(address, privateKey, opts, this.ipfsNode.options.address);
+    const txData = this.ipfsNode.methods.addNode(
+      opts.name,
+      opts.host,
+      opts.port,
+    ).encodeABI();
+    return this._sendSignedTransaction(address, privateKey, txData, this.ipfsNode.options.address);
   }
 
   /**
@@ -173,11 +190,11 @@ class PluginStorage extends EventEmitter2 {
    * @param {object} txData
    * @returns
    */
-  async _sendSignedTransaction(from, privateKey, txData) {
+  async _sendSignedTransaction(from, privateKey, txData, cAddress) {
     const nonce = await this.web3.eth.getTransactionCount(from, "pending");
     const rawTx = {
       from,
-      to: this.usageHistory.options.address,
+      to: cAddress,
       gas: 29900000,
       gasPrice: 0,
       data: txData,
