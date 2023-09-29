@@ -144,11 +144,11 @@ class PluginStorage extends EventEmitter2 {
   }
 
   getUserHistoryIdList(address) {
-    return this.usageHistory.methods.getOperatorHistoryIdList(address).call();
+    return this.usageHistory.methods.getUserHistoryIdList(address).call();
   }
 
   getUserHistory(address) {
-    return this.usageHistory.methods.getOperatorHistory(address).call();
+    return this.usageHistory.methods.getUserHistory(address).call();
   }
 
   createHistory(address, privateKey, opts) {
