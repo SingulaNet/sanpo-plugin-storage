@@ -176,7 +176,7 @@ class PluginStorage extends EventEmitter2 {
     const nonce = await this.web3.eth.getTransactionCount(from, "pending");
     const rawTx = {
       from,
-      to: this.contract.options.address,
+      to: this.usageHistory.options.address,
       gas: 29900000,
       gasPrice: 0,
       data: txData,
