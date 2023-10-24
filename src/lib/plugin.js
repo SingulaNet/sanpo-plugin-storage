@@ -179,6 +179,7 @@ class PluginStorage extends EventEmitter2 {
       opts.name,
       opts.host,
       opts.port,
+      opts.address,
     ).encodeABI();
     return this._sendSignedTransaction(address, privateKey, txData, this.ipfsNode.options.address);
   }
