@@ -15,13 +15,15 @@ let plugin = null; // instance
 
   let res;
 
-  res = await plugin.addNode(
+  res = await plugin.registerNode(
     '0xE9D89022064a5f27EE29B1DBE0abAdC7737EA5D0',
     '0xbcf9696b620b304b8b807390cc30cceb0b811f2935fc5169de97ccd41dbc073e',
+    // "0xF4764634B8E82B1Dca5E77A2F4b59e48Fc545Be2",
+    // "0x39f38803f34f15c933f2bd062a6d05c598ddcbd44a63ef11e176f4d681110fe3",
     {
-      name: "IPFS-Node-Testnet1",
-      host: "ipfs-dev-node-1.singuladev.net",
-      port: "443",
+      name: "IPFS-Node-Testnet2",
+      host: "ipfs-dev-node-3.singuladev.net",
+      port: 443,
       type: "STORAGE",
     }
   );

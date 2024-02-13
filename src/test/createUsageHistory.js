@@ -9,22 +9,17 @@ let plugin = null; // instance
     provider: "wss://geth-testnet-auth1.japaneast.cloudapp.azure.com/ws",
     usageFeeAddress: "0xd87EB3eDFE6eE3836c9E64A8D51a177850Fb64eB", // dev
     usageHistoryAddress: "0x3D33C58751adc6d913Ed9ddeeB7cAF4c007fA457", // dev
-    nodeAddress: "0xe72221f951D0202670752Ae3A514e21FA21c7d89",
   })
   await plugin.connect();
 
-  let res;
+  const address = "0xF18Fb76277A0Ea3FE23347A4445bb14C00D9f4FE";
+  const key = "0xda3c701de5d1364d42fcc590f84d994b5769090a13101dce72b666364edc1582";
 
-  res = await plugin.addNode(
-    '0xE9D89022064a5f27EE29B1DBE0abAdC7737EA5D0',
-    '0xbcf9696b620b304b8b807390cc30cceb0b811f2935fc5169de97ccd41dbc073e',
-    {
-      name: "IPFS-Node-Testnet1",
-      host: "ipfs-dev-node-1.singuladev.net",
-      port: "443",
-      type: "STORAGE",
-    }
-  );
+  let res;
+  const hist = {
+    
+  }
+  res = await plugin.createHistory(address, key, hist);
   console.log(res);
   process.exit();
 })()

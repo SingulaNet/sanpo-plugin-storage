@@ -15,16 +15,9 @@ let plugin = null; // instance
 
   let res;
 
-  res = await plugin.addNode(
-    '0xE9D89022064a5f27EE29B1DBE0abAdC7737EA5D0',
-    '0xbcf9696b620b304b8b807390cc30cceb0b811f2935fc5169de97ccd41dbc073e',
-    {
-      name: "IPFS-Node-Testnet1",
-      host: "ipfs-dev-node-1.singuladev.net",
-      port: "443",
-      type: "STORAGE",
-    }
-  );
+  res = await plugin.getNodeList("STORAGE");
+  console.log(res);
+  res = await plugin.getValidNodeList("STORAGE");
   console.log(res);
   process.exit();
 })()
