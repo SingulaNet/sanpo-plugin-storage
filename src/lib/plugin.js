@@ -6,9 +6,9 @@ const Web3 = require('web3');
 const Tx = require('ethereumjs-tx').Transaction;
 const Common = require('ethereumjs-common').default;
 
-const usagefeeAbi = require('../abi/StorageUsageFee.json');
 const usageHistoryAbi = require('../abi/StorageUsageHistory.json');
 const ipfsNodeAbi = require('../abi/IpfsNode.json');
+const definitionOfSptAndDataUsageAbi = require('../abi/DefinitionOfSptAndDataUsage.json');
 const createWebsocketProvider = (provider) => new Web3.providers.WebsocketProvider(provider, {
   clientConfig: {
     maxReceivedFrameSize: 100000000,
@@ -31,8 +31,11 @@ class PluginStorage extends EventEmitter2 {
     this._primaryProvider = opts.provider;
     this._secondaryProvider = opts.altProvider || opts.provider;
     this.provider = this._primaryProvider;
-    this.usageFeeAddress = opts.usageFeeAddress;
     this.usageHistoryAddress = opts.usageHistoryAddress;
+    this.StorageProvisionRewardAddress = opts.StorageProvisionRewardAddress;
+    this.StreamingProvisionRewardAddress = opts.StreamingProvisionRewardAddress;
+    this.StorageUsageFeeAddress = opts.StorageUsageFeeAddress;
+    this.StreamingUsageFeeAddress = opts.StreamingUsageFeeAddress;
     this.ipfsNodeAddress = opts.ipfsNodeAddress;
     this.web3 = null;
     this.healthCheck = false;
@@ -48,7 +51,10 @@ class PluginStorage extends EventEmitter2 {
 
     this.web3 = new Web3(createWebsocketProvider(this.provider));
     this.web3.eth.handleRevert = true;
-    this.usageFee = new this.web3.eth.Contract(usagefeeAbi, this.usageFeeAddress);
+    this.storageProvisionReward = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.StorageProvisionRewardAddress);
+    this.streamingProvisionReward = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.StreamingProvisionRewardAddress);
+    this.storageUsageFee = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.StorageUsageFeeAddress);
+    this.streamingUsageFee = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.StreamingUsageFeeAddress);
     this.usageHistory = new this.web3.eth.Contract(usageHistoryAbi, this.usageHistoryAddress);
     this.ipfsNode = new this.web3.eth.Contract(ipfsNodeAbi, this.ipfsNodeAddress);
     this.web3.eth.transactionBlockTimeout = 20000;
@@ -102,8 +108,20 @@ class PluginStorage extends EventEmitter2 {
     }, 5 * 1000);
   }
 
-  getFeeDefinition() {
-    return this.usageFee.methods.getFeeDefinition().call();
+  getStorageProvisionReward() {
+    return this.storageProvisionReward.methods.getDefinition().call();
+  }
+
+  getStreamingProvisionReward() {
+    return this.streamingProvisionReward.methods.getDefinition().call();
+  }
+
+  getStorageUsageFee() {
+    return this.storageUsageFee.methods.getDefinition().call();
+  }
+
+  getStreamingUsageFee() {
+    return this.streamingUsageFee.methods.getDefinition().call();
   }
 
   addFeeDefinition(address, privateKey, opts) {
