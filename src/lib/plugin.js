@@ -33,10 +33,10 @@ class PluginStorage extends EventEmitter2 {
     this.provider = this._primaryProvider;
     this.usageHistoryAddress = opts.usageHistoryAddress;
     this.nodeAddress = opts.nodeAddress;
-    this.StorageProvisionRewardAddress = opts.StorageProvisionRewardAddress;
-    this.StreamingProvisionRewardAddress = opts.StreamingProvisionRewardAddress;
-    this.StorageUsageFeeAddress = opts.StorageUsageFeeAddress;
-    this.StreamingUsageFeeAddress = opts.StreamingUsageFeeAddress;
+    this.storageProvisionRewardAddress = opts.storageProvisionRewardAddress;
+    this.streamingProvisionRewardAddress = opts.streamingProvisionRewardAddress;
+    this.storageUsageFeeAddress = opts.storageUsageFeeAddress;
+    this.streamingUsageFeeAddress = opts.streamingUsageFeeAddress;
     this.web3 = null;
     this.healthCheck = false;
   }
@@ -51,10 +51,10 @@ class PluginStorage extends EventEmitter2 {
 
     this.web3 = new Web3(createWebsocketProvider(this.provider));
     this.web3.eth.handleRevert = true;
-    this.storageProvisionReward = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.StorageProvisionRewardAddress);
-    this.streamingProvisionReward = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.StreamingProvisionRewardAddress);
-    this.storageUsageFee = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.StorageUsageFeeAddress);
-    this.streamingUsageFee = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.StreamingUsageFeeAddress);
+    this.storageProvisionReward = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.storageProvisionRewardAddress);
+    this.streamingProvisionReward = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.streamingProvisionRewardAddress);
+    this.storageUsageFee = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.storageUsageFeeAddress);
+    this.streamingUsageFee = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.streamingUsageFeeAddress);
     this.usageHistory = new this.web3.eth.Contract(usageHistoryAbi, this.usageHistoryAddress);
     this.node = new this.web3.eth.Contract(nodeAbi, this.nodeAddress);
     this.web3.eth.transactionBlockTimeout = 20000;
