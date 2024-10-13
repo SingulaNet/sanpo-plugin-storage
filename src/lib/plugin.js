@@ -131,7 +131,7 @@ class PluginStorage extends EventEmitter2 {
       opts.contentType,
       opts.fileName,
     ).encodeABI();
-    return this._sendSignedTransaction(address, privateKey, txData, this.storageUsageHistory.options.address);
+    return this._sendSignedTransaction(address, privateKey, txData);
   }
 
   createStreamingHistory(address, privateKey, opts) {
@@ -144,103 +144,48 @@ class PluginStorage extends EventEmitter2 {
       opts.contentType,
       opts.fileName,
     ).encodeABI();
-    return this._sendSignedTransaction(address, privateKey, txData, this.storageUsageHistory.options.address);
-  }
-
-/*
-  addFeeDefinition(address, privateKey, opts) {
-    const txData = this.usageFee.methods.addFeeDefinition(
-      opts.balance,
-      opts.maxFileSize,
-    ).encodeABI();
     return this._sendSignedTransaction(address, privateKey, txData);
   }
 
-  updateFeeDefinition(address, privateKey, opts) {
-    const txData = this.usageFee.methods.updateFeeDefinition(
-      opts.balance,
-      opts.maxFileSize,
-      opts.index,
-    ).encodeABI();
-    return this._sendSignedTransaction(address, privateKey, txData);
-  }
-
-  disableFeeDefinition(address, privateKey, opts) {
-    const txData = this.usageFee.methods.disableFeeDefinition(
-      opts.index,
-    ).encodeABI();
-    return this._sendSignedTransaction(address, privateKey, txData);
-  }
-
-  getHistory(historyId) {
-    return this.usageHistory.methods.getHistory(historyId).call();
-  }
-
-  getHistoryCount() {
-    return this.usageHistory.methods.getHistoryCount().call();
-  }
-
-  getOperatorHistoryIdList(address) {
-    return this.usageHistory.methods.getOperatorHistoryIdList(address).call();
-  }
-
-  getOperatorHistory(address) {
-    return this.usageHistory.methods.getOperatorHistory(address).call();
-  }
-
-  getUserHistoryIdList(address) {
-    return this.usageHistory.methods.getUserHistoryIdList(address).call();
-  }
-
-  getUserHistory(address) {
-    return this.usageHistory.methods.getUserHistory(address).call();
-  }
-
-  createHistory(address, privateKey, opts) {
-    const txData = this.usageHistory.methods.createHistory(
-      opts.fileSize,
-      opts.ipfsHash,
-      opts.ipfsOriginHash,
-      opts.timestamp,
-      opts.user,
-      opts.operator,
-      opts.contentType,
-      opts.result,
-      opts.fileName,
-    ).encodeABI();
-    return this._sendSignedTransaction(address, privateKey, txData, this.usageHistory.options.address);
-  }
-
-  getNodeList(type) {
-    return this.node.methods.getNodeList(type).call();
-  }
-
-  getValidNodeList(type) {
-    return this.node.methods.getValidNodeList(type).call();
-  }
-
-  addNode(address, privateKey, opts) {
-    console.log(address, privateKey, opts, this.node.options.address);
-    const txData = this.node.methods.addNode(
-      opts.name,
-      opts.host,
-      opts.port,
+  /**
+   * addDefinition
+   * @param {*} opts.amount SPT
+   * @param {*} opts.dataUsage GB
+   * @param {*} opts.type 1: storageProvisionReward, 2: storageUsageFee, 3: streamingProvisionReward, 4: streamingUsageFee
+   * @returns 
+   */
+  addDefinition(address, privateKey, opts) {
+    const txData = this.storageUsageHistory.methods.addDefinition(
+      opts.amount,
+      opts.dataUsage,
       opts.type,
     ).encodeABI();
-    return this._sendSignedTransaction(address, privateKey, txData, this.node.options.address);
+    return this._sendSignedTransaction(address, privateKey, txData);
   }
 
-  registerNode(address, privateKey, opts) {
-    console.log(address, privateKey, opts);
-    const txData = this.node.methods.registerNode(
-      opts.name,
-      opts.host,
-      opts.port,
+  updateDefinition(address, privateKey, opts) {
+    const txData = this.storageUsageHistory.methods.updateDefinition(
+      opts.amount,
+      opts.dataUsage,
+      opts.index,
       opts.type,
     ).encodeABI();
-    return this._sendSignedTransaction(address, privateKey, txData, this.node.options.address);
+    return this._sendSignedTransaction(address, privateKey, txData);
   }
-*/
+
+  /**
+   * disableDefinition
+   * @param {*} opts.index index 
+   * @param {*} opts.type 1: storageProvisionReward, 2: storageUsageFee, 3: streamingProvisionReward, 4: streamingUsageFee
+   * @returns 
+   */
+  disableDefinition(address, privateKey, opts) {
+    const txData = this.storageUsageHistory.methods.disableDefinition(
+      opts.index,
+      opts.type,
+    ).encodeABI();
+    return this._sendSignedTransaction(address, privateKey, txData);
+  }
 
   /**
    * Send transaction
@@ -249,11 +194,11 @@ class PluginStorage extends EventEmitter2 {
    * @param {object} txData
    * @returns
    */
-  async _sendSignedTransaction(from, privateKey, txData, cAddress) {
+  async _sendSignedTransaction(from, privateKey, txData) {
     const nonce = await this.web3.eth.getTransactionCount(from, "pending");
     const rawTx = {
       from,
-      to: cAddress,
+      to: this.storageUsageHistory.options.address,
       gas: 29900000,
       gasPrice: 0,
       data: txData,
@@ -271,7 +216,7 @@ class PluginStorage extends EventEmitter2 {
           }
         })
         .on("error", (error) => {
-          console.error;
+          console.log(error);
           reject(error);
         })
     });
