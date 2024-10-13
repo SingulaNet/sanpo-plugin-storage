@@ -6,9 +6,7 @@ const Web3 = require('web3');
 const Tx = require('ethereumjs-tx').Transaction;
 const Common = require('ethereumjs-common').default;
 
-const usageHistoryAbi = require('../abi/StorageUsageHistory.json');
-const nodeAbi = require('../abi/Node.json');
-const definitionOfSptAndDataUsageAbi = require('../abi/DefinitionOfSptAndDataUsage.json');
+const storageUsageHistoryAbi = require('../abi/StorageUsageHistory.json');
 const createWebsocketProvider = (provider) => new Web3.providers.WebsocketProvider(provider, {
   clientConfig: {
     maxReceivedFrameSize: 100000000,
@@ -31,12 +29,7 @@ class PluginStorage extends EventEmitter2 {
     this._primaryProvider = opts.provider;
     this._secondaryProvider = opts.altProvider || opts.provider;
     this.provider = this._primaryProvider;
-    this.usageHistoryAddress = opts.usageHistoryAddress;
-    this.nodeAddress = opts.nodeAddress;
-    this.storageProvisionRewardAddress = opts.storageProvisionRewardAddress;
-    this.streamingProvisionRewardAddress = opts.streamingProvisionRewardAddress;
-    this.storageUsageFeeAddress = opts.storageUsageFeeAddress;
-    this.streamingUsageFeeAddress = opts.streamingUsageFeeAddress;
+    this.storageUsageHistoryAddress = opts.storageUsageHistoryAddress;
     this.web3 = null;
     this.healthCheck = false;
   }
@@ -51,12 +44,7 @@ class PluginStorage extends EventEmitter2 {
 
     this.web3 = new Web3(createWebsocketProvider(this.provider));
     this.web3.eth.handleRevert = true;
-    this.storageProvisionReward = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.storageProvisionRewardAddress);
-    this.streamingProvisionReward = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.streamingProvisionRewardAddress);
-    this.storageUsageFee = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.storageUsageFeeAddress);
-    this.streamingUsageFee = new this.web3.eth.Contract(definitionOfSptAndDataUsageAbi, this.streamingUsageFeeAddress);
-    this.usageHistory = new this.web3.eth.Contract(usageHistoryAbi, this.usageHistoryAddress);
-    this.node = new this.web3.eth.Contract(nodeAbi, this.nodeAddress);
+    this.storageUsageHistory = new this.web3.eth.Contract(storageUsageHistoryAbi, this.storageUsageHistoryAddress);
     this.web3.eth.transactionBlockTimeout = 20000;
   }
 
@@ -108,22 +96,58 @@ class PluginStorage extends EventEmitter2 {
     }, 5 * 1000);
   }
 
-  getStorageProvisionReward() {
-    return this.storageProvisionReward.methods.getDefinition().call();
+  getStorageProvisionRewardDefinition() {
+    return this.storageUsageHistory.methods.getStorageProvisionRewardDefinition().call();
   }
 
-  getStreamingProvisionReward() {
-    return this.streamingProvisionReward.methods.getDefinition().call();
+  getStorageUsageFeeDefinition() {
+    return this.storageUsageHistory.methods.getStorageUsageFeeDefinition().call();
   }
 
-  getStorageUsageFee() {
-    return this.storageUsageFee.methods.getDefinition().call();
+  getStreamingProvisionRewardDefinition() {
+    return this.storageUsageHistory.methods.getStreamingProvisionRewardDefinition().call();
   }
 
-  getStreamingUsageFee() {
-    return this.streamingUsageFee.methods.getDefinition().call();
+  getStreamingUsageFeeDefinition() {
+    return this.storageUsageHistory.methods.getStreamingUsageFeeDefinition().call();
   }
 
+  getOperatorHistory(address) {
+    return this.storageUsageHistory.methods.getOperatorHistory(address).call();
+  }
+
+  getUserHistory(address) {
+    return this.storageUsageHistory.methods.getUserHistory(address).call();
+  }
+
+  createStorageHistory(address, privateKey, opts) {
+    console.log(opts)
+    const txData = this.storageUsageHistory.methods.createStorageHistory(
+      opts.fileSize,
+      opts.ipfsHash,
+      opts.timestamp,
+      opts.user,
+      opts.operator,
+      opts.contentType,
+      opts.fileName,
+    ).encodeABI();
+    return this._sendSignedTransaction(address, privateKey, txData, this.storageUsageHistory.options.address);
+  }
+
+  createStreamingHistory(address, privateKey, opts) {
+    const txData = this.storageUsageHistory.methods.createStreamingHistory(
+      opts.fileSize,
+      opts.ipfsHash,
+      opts.timestamp,
+      opts.user,
+      opts.operator,
+      opts.contentType,
+      opts.fileName,
+    ).encodeABI();
+    return this._sendSignedTransaction(address, privateKey, txData, this.storageUsageHistory.options.address);
+  }
+
+/*
   addFeeDefinition(address, privateKey, opts) {
     const txData = this.usageFee.methods.addFeeDefinition(
       opts.balance,
@@ -216,6 +240,7 @@ class PluginStorage extends EventEmitter2 {
     ).encodeABI();
     return this._sendSignedTransaction(address, privateKey, txData, this.node.options.address);
   }
+*/
 
   /**
    * Send transaction
