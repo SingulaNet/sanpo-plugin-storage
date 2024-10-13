@@ -1,8 +1,109 @@
 [
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_transferFromAddress",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "historyId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "fileSize",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "ipfsHash",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "contentType",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "fileName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "usage",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "usageCode",
+        "type": "uint256"
+      }
+    ],
+    "name": "UsageHistoryLog",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_dataUsage",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_type",
+        "type": "uint256"
+      }
+    ],
+    "name": "addDefinition",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [
@@ -14,11 +115,6 @@
       {
         "internalType": "string",
         "name": "_ipfsHash",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_ipfsOriginHash",
         "type": "string"
       },
       {
@@ -42,9 +138,47 @@
         "type": "string"
       },
       {
-        "internalType": "bool",
-        "name": "_result",
-        "type": "bool"
+        "internalType": "string",
+        "name": "_fileName",
+        "type": "string"
+      }
+    ],
+    "name": "createStorageHistory",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_fileSize",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_ipfsHash",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_timestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_operator",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_contentType",
+        "type": "string"
       },
       {
         "internalType": "string",
@@ -52,7 +186,25 @@
         "type": "string"
       }
     ],
-    "name": "createHistory",
+    "name": "createStreamingHistory",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_type",
+        "type": "uint256"
+      }
+    ],
+    "name": "disableDefinition",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -80,11 +232,6 @@
             "type": "string"
           },
           {
-            "internalType": "string",
-            "name": "ipfsOriginHash",
-            "type": "string"
-          },
-          {
             "internalType": "uint256",
             "name": "timestamp",
             "type": "uint256"
@@ -105,14 +252,19 @@
             "type": "string"
           },
           {
-            "internalType": "bool",
-            "name": "result",
-            "type": "bool"
-          },
-          {
             "internalType": "string",
             "name": "fileName",
             "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "usage",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "usageCode",
+            "type": "uint256"
           }
         ],
         "internalType": "struct StorageUsageHistory.UsageHistory",
@@ -159,11 +311,6 @@
             "type": "string"
           },
           {
-            "internalType": "string",
-            "name": "ipfsOriginHash",
-            "type": "string"
-          },
-          {
             "internalType": "uint256",
             "name": "timestamp",
             "type": "uint256"
@@ -184,14 +331,19 @@
             "type": "string"
           },
           {
-            "internalType": "bool",
-            "name": "result",
-            "type": "bool"
-          },
-          {
             "internalType": "string",
             "name": "fileName",
             "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "usage",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "usageCode",
+            "type": "uint256"
           }
         ],
         "internalType": "struct StorageUsageHistory.UsageHistory[]",
@@ -203,19 +355,100 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_address",
-        "type": "address"
-      }
-    ],
-    "name": "getOperatorHistoryIdList",
+    "inputs": [],
+    "name": "getStorageProvisionRewardDefinition",
     "outputs": [
       {
-        "internalType": "uint256[]",
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "dataUsage",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct StorageUsageHistory.Definition[]",
         "name": "",
-        "type": "uint256[]"
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getStorageUsageFeeDefinition",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "dataUsage",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct StorageUsageHistory.Definition[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getStreamingProvisionRewardDefinition",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "dataUsage",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct StorageUsageHistory.Definition[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getStreamingUsageFeeDefinition",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "dataUsage",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct StorageUsageHistory.Definition[]",
+        "name": "",
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
@@ -244,11 +477,6 @@
             "type": "string"
           },
           {
-            "internalType": "string",
-            "name": "ipfsOriginHash",
-            "type": "string"
-          },
-          {
             "internalType": "uint256",
             "name": "timestamp",
             "type": "uint256"
@@ -269,14 +497,19 @@
             "type": "string"
           },
           {
-            "internalType": "bool",
-            "name": "result",
-            "type": "bool"
-          },
-          {
             "internalType": "string",
             "name": "fileName",
             "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "usage",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "usageCode",
+            "type": "uint256"
           }
         ],
         "internalType": "struct StorageUsageHistory.UsageHistory[]",
@@ -288,22 +521,44 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "token",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "_address",
+        "internalType": "contract ITransburn",
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "getUserHistoryIdList",
-    "outputs": [
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_dataUsage",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_type",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "name": "updateDefinition",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]
